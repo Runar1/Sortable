@@ -110,7 +110,7 @@
 
 					scrollOffsetX,
 					scrollOffsetY
-				;
+					;
 
 				// Delect scrollEl
 				if (scrollParentEl !== rootEl) {
@@ -161,7 +161,7 @@
 							scrollOffsetY = vy ? vy * speed : 0;
 							scrollOffsetX = vx ? vx * speed : 0;
 
-							if ('function' === typeof(scrollCustomFn)) {
+							if ('function' === typeof (scrollCustomFn)) {
 								return scrollCustomFn.call(_this, scrollOffsetX, scrollOffsetY, evt);
 							}
 
@@ -203,7 +203,7 @@
 			var originalGroup = options.group;
 
 			if (!originalGroup || typeof originalGroup != 'object') {
-				originalGroup = {name: originalGroup};
+				originalGroup = { name: originalGroup };
 			}
 
 			group.name = originalGroup.name;
@@ -213,7 +213,7 @@
 
 			options.group = group;
 		}
-	;
+		;
 
 
 	/**
@@ -262,7 +262,7 @@
 			fallbackClass: 'sortable-fallback',
 			fallbackOnBody: false,
 			fallbackTolerance: 0,
-			fallbackOffset: {x: 0, y: 0}
+			fallbackOffset: { x: 0, y: 0 }
 		};
 
 
@@ -560,7 +560,7 @@
 
 		_onTouchMove: function (/**TouchEvent*/evt) {
 			if (tapEvt) {
-				var	options = this.options,
+				var options = this.options,
 					fallbackTolerance = options.fallbackTolerance,
 					fallbackOffset = options.fallbackOffset,
 					touch = evt.touches ? evt.touches[0] : evt,
@@ -792,25 +792,31 @@
 							|| (lastParentCSS.display == 'flex' && lastParentCSS['flex-direction'].indexOf('row') === 0),
 						isWide = (target.offsetWidth > dragEl.offsetWidth),
 						isLong = (target.offsetHeight > dragEl.offsetHeight),
-						halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
+						position = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height),
 						nextSibling = target.nextElementSibling,
+						before = false,
 						after = false
-					;
+						;
 
 					if (floating) {
 						var elTop = dragEl.offsetTop,
 							tgTop = target.offsetTop;
 
 						if (elTop === tgTop) {
-							after = (target.previousElementSibling === dragEl) && !isWide || halfway && isWide;
-						}
-						else if (target.previousElementSibling === dragEl || dragEl.previousElementSibling === target) {
-							after = (evt.clientY - targetRect.top) / height > 0.5;
+							after = (target.previousElementSibling === dragEl) && !isWide ||
+								position > 0.9 && isWide;
+							before = (target.previousElementSibling === dragEl) && !isWide ||
+								position < 0.1 && isWide;
+						} else if (target.previousElementSibling === dragEl || dragEl.previousElementSibling === target) {
+							after = (evt.clientY - targetRect.top) / height > 0.9;
+							before = (evt.clientY - targetRect.top) / height < 0.1;
 						} else {
 							after = tgTop > elTop;
+							before = tgTop < elTop;
 						}
-						} else if (!isMovingBetweenSortable) {
-						after = (nextSibling !== dragEl) && !isLong || halfway && isLong;
+					} else if (!isMovingBetweenSortable) {
+						after = position > 0.9;
+						before = position < 0.1;
 					}
 
 					var moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt, after);
@@ -828,8 +834,10 @@
 						if (!dragEl.contains(el)) {
 							if (after && !nextSibling) {
 								el.appendChild(dragEl);
-							} else {
-								target.parentNode.insertBefore(dragEl, after ? nextSibling : target);
+							} else if (after) {
+								target.parentNode.insertBefore(dragEl, nextSibling);
+							} else if (before) {
+								target.parentNode.insertBefore(dragEl, target);
 							}
 						}
 
@@ -981,30 +989,30 @@
 			this._nulling();
 		},
 
-		_nulling: function() {
+		_nulling: function () {
 			rootEl =
-			dragEl =
-			parentEl =
-			ghostEl =
-			nextEl =
-			cloneEl =
-			lastDownEl =
+				dragEl =
+				parentEl =
+				ghostEl =
+				nextEl =
+				cloneEl =
+				lastDownEl =
 
-			scrollEl =
-			scrollParentEl =
+				scrollEl =
+				scrollParentEl =
 
-			tapEvt =
-			touchEvt =
+				tapEvt =
+				touchEvt =
 
-			moved =
-			newIndex =
+				moved =
+				newIndex =
 
-			lastEl =
-			lastCSS =
+				lastEl =
+				lastCSS =
 
-			putSortable =
-			activeGroup =
-			Sortable.active = null;
+				putSortable =
+				activeGroup =
+				Sortable.active = null;
 
 			savedInputChecked.forEach(function (el) {
 				el.checked = true;
@@ -1488,7 +1496,7 @@
 				};
 			}
 		}));
-	} catch (err) {}
+	} catch (err) { }
 
 	// Export utils
 	Sortable.utils = {
